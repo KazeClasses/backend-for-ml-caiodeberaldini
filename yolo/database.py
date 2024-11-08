@@ -15,6 +15,9 @@ def connect_postgres() -> psycopg.Connection[psycopg.rows.TupleRow]:
         row_factory=psycopg.rows.dict_row
     )
 
+    database_client.execute("DROP TABLE classes")
+    database_client.execute("CREATE TABLE classes (id UUID PRIMARY KEY, name TEXT)")
+
     return database_client
 
 @database_service.route("/create_table", methods=["POST"])

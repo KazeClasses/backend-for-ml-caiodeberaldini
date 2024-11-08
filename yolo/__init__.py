@@ -2,8 +2,16 @@ import os
 from flask import Flask
 from flask_cors import CORS
 
+from dotenv import load_dotenv, dotenv_values
+
+
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
+
+    load_dotenv(override=True)
+
+    config = dotenv_values()
+    app.config.from_mapping(config)
 
     # Register blueprints
     from . import database, classifier
@@ -11,10 +19,10 @@ def create_app(test_config=None):
     app.register_blueprint(classifier.classifier_service, url_prefix="/classifier")
 
     # Load configuration
-    if test_config is None:
-        app.config.from_pyfile('config.py', silent=True)
-    else:
-        app.config.from_mapping(test_config)
+    # if test_config is None:
+    #     app.config.from_pyfile('config.py', silent=True)
+    # else:
+    #     app.config.from_mapping(test_config)
 
     # Ensure instance folder exists
     try:
@@ -30,4 +38,4 @@ def create_app(test_config=None):
     # Enable CORS
     CORS(app)
 
-    return app
+    return app    
